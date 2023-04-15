@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" class="notranslate" translate="no">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Draw Text</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+  <style>
+    #canvasContainer {
+      border: 1px solid #c3c3c3;
+      padding: 0.5em;
+      border-radius: 0.5em;
+      /* font-smooth: never;
+  -webkit-font-smoothing : none; */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- svg define filter to remove antialiasing -->
+  <svg width="0" height="0" style="position:absolute;z-index:-1;">
+    <defs>
+      <filter id="remove-alpha" x="0" y="0" width="100%" height="100%">
+        <feComponentTransfer>
+          <feFuncA type="discrete" tableValues="0 1"></feFuncA>
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+  <div class="container">
+    <div class="card mt-3">
+      <div class="card-header">
+        Text to render
+      </div>
+      <div class="card-body">
+        <div>
+          Input text here. You can enter multiple lines. Or select predifined text blocks.
+        </div>
+        
+        <div class="input-group input-group-sm mb-1">
+          <span class="input-group-text">Text blocks</span>
+
+          <select id="text-block" class="form-select" onchange="setText()">
+            <option value="digits">Digits 0-9</option>
+            <option value="en-monts">(en) Monts</option>
+            <option value="en-monts_up">(en) Monts Uppercase</option>
+            <option value="en-monts3">(en) Monts short</option>
+            <option value="en-monts3_up">(en) Monts short Uppercase</option>
+            <option value="en-weekdays">(en) Weekdays</option>
+            <option value="en-weekdays_up">(en) Weekdays Uppercase</option>
+            <option value="en-weekdays3">(en) Weekdays short 3</option>
+            <option value="en-weekdays3_up">(en) Weekdays short 3 Uppercase</option>
+            <option value="en-weekdays2">(en) Weekdays short 2</option>
+            <option value="en-weekdays2_up">(en) Weekdays short 2 Uppercase</option>
+            <option value="ru-monts">(ru) Monts</option>
+            <option value="ru-monts_up">(ru) Monts Uppercase</option>
+            <option value="ru-monts3">(ru) Monts short</option>
+            <option value="ru-monts3_up">(ru) Monts short Uppercase</option>
+            <option value="ru-weekdays">(ru) Weekdays</option>
+            <option value="ru-weekdays_up">(ru) Weekdays Uppercase</option>
+            <option value="ru-weekdays3">(ru) Weekdays short 3</option>
+            <option value="ru-weekdays3_up">(ru) Weekdays short 3 Uppercase</option>
+            <option value="ru-weekdays2">(ru) Weekdays short 2</option>
+            <option value="ru-weekdays2_up">(ru) Weekdays short 2 Uppercase</option>
+
+          </select>
+        </div>
+        <textarea id="myText" class="form-control" rows="12">
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9</textarea>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <div class="card-header">
+        Settings
+      </div>
+      <div class="card-body">
+        <div class="input-group input-group-sm mb-1">
+          <span class="input-group-text">Font</span>
+          <input type="file" class="form-control form-control-sm" id="font-input" name="font-input" accept=".ttf,.otf">
+          <button type="button" class="btn btn-danger" onclick="removeCustomFont()" title="clear font input">x</button>
+          <span class="input-group-text">Size, px</span>
+          <input type="number" class="form-control form-control-sm" id="font-size" name="font-size" min="1" step="1"
+            value="20" onchange="drawText()">
+          <span class="input-group-text">Style</span>
+          <select id="font-style" class="form-select" onchange="drawText()">
+            <option value="normal">Normal</option>
+            <option value="normal bold">Bold</option>
+            <option value="italic">Italic</option>
+            <option value="italic bold">Italic Bold</option>
+          </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+          <span class="input-group-text">Text align</span>
+    
+          <select id="align" class="form-select" onchange="drawText()">
+            <option value="start">Left</option>
+            <option value="center">Center</option>
+            <option value="end">Right</option>
+          </select>
+        </div>
+    
+        <div class="input-group input-group-sm mb-1">
+          <div class="input-group-text">
+            <input type="checkbox" class="form-check-input me-3" id="smooth" name="smooth" value="smooth" checked
+              onchange="drawText()">
+            <label class="form-check-label" for="smooth">Smooth text</label>
+          </div>
+          <div class="input-group-text">
+            <label for="textcolor" class="form-check-label me-3">Text color</label>
+            <input type="color" class="form-control form-control-sm form-control-color" id="textcolor" name="textcolor"
+              value="#ffffff" onchange="drawText()">
+          </div>
+        </div>
+    
+        <div class="input-group input-group-sm">
+          <div class="input-group-text">
+            <input type="checkbox" class="form-check-input me-3" id="transparent" name="transparent" value="transparent"
+              onclick="handleTransparentClick()">
+            <label class="form-check-label" for="transparent"> transparent background</label>
+          </div>
+          <div class="input-group-text">
+            <label for="backgroundcolor" class="form-check-label me-3" id="labelbackgroundcolor"> Background color </label>
+            <input type="color" class="form-control form-control-sm form-control-color" id="backgroundcolor"
+              name="backgroundcolor" value="#000000" onchange="drawText()">
+          </div>
+          <div class="input-group-text">
+            <input type="checkbox" class="form-check-input me-3" id="removeblack" name="removeblack" value="removeblack"
+              onchange="drawText()">
+            <label class="form-check-label" for="removeblack"> background color to alpha</label>
+          </div>
+        </div>
+      </div>  
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        Result
+      </div>
+      <div class="card-body">
+        <div>
+          <button type="button" class="btn btn-primary m-1" onclick="drawText()">re-draw Text</button>
+        </div>
+        <div id="canvasInfo" class="mt-3 mb-3">
+          <span>Line height:</span>
+          <span id="lineHeight"></span>
+          <span>Line width:</span>
+          <span id="lineWidth"></span>
+        </div>
+        <div id="canvasContainer" class="mb-3"></div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        Save
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="input-group input-group-sm mb-1">
+            <div class="input-group-text">
+              Prefix
+            </div>
+            <input type="text" class="form-control form-control-sm" id="prefixname" name="prefixname"
+              placeholder="prefix for file name">
+
+            <div class="input-group-text">
+              Start file name index from
+            </div>
+            <input type="number" class="form-control form-control-sm" id="startindex" name="startindex" min="0" value="10"
+              placeholder="start index from">
+          </div>
+          <button type="button" class="btn btn-success m-1" onclick="downloadAll()">Download all</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="drawtext.js"></script>
+
+</body>
+
+</html>
