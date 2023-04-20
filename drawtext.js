@@ -11,43 +11,54 @@ const startindexElement = document.getElementById("startindex");
 const fontInputElement = document.getElementById("font-input")
 const fontSizeElement = document.getElementById("font-size")
 const fontStyleElement = document.getElementById("font-style")
+const fontBuiltInElement = document.getElementById("font-builtin")
 const textBlockElement = document.getElementById("text-block")
+const textVarElement = document.getElementById("text-var")
 
 var canvasArray = []
 let font;
-let fontSize = 48;
-let fontStyle = 'normal';
-
-drawText()
 
 textBlocks = { 
     'digits': "0\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-    ,'en-monts': "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+    ,'digits_cap': "0\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+    ,'digits_up': "0\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+    ,'en-monts': "january\nfebruary\nmarch\napril\nmay\njune\njuly\naugust\nseptember\noctober\nnovember\ndecember"
+    ,'en-monts_cap': "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
     ,'en-monts_up': "JANUARY\nFEBRUARY\nMARCH\nAPRIL\nMAY\nJUNE\nJULY\nAUGUST\nSEPTEMBER\nOCTOBER\nNOVEMBER\nDECEMBER"
-    ,'en-monts3': "Jan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSept\nOct\nNov\nDec"
+    ,'en-monts3': "jan\nfeb\nmar\napr\nmay\njun\njul\naug\nsept\noct\nnov\ndec"
+    ,'en-monts3_cap': "Jan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSept\nOct\nNov\nDec"
     ,'en-monts3_up': "JAN\nFEB\nMAR\nAPR\nMAY\nJUN\nJUL\nAUG\nSEPT\nOCT\nNOV\nDEC"
-    ,'en-weekdays': "Monday\nTuesday\nWednesday\nThursday\nFriday\nSaturday\nSunday"
+    ,'en-weekdays': "monday\ntuesday\nwednesday\nthursday\nfriday\nsaturday\nsunday"
+    ,'en-weekdays_cap': "Monday\nTuesday\nWednesday\nThursday\nFriday\nSaturday\nSunday"
     ,'en-weekdays_up': "MONDAY\nTUESDAY\nWEDNESDAY\nTHURSDAY\nFRIDAY\nSATURDAY\nSUNDAY"
-    ,'en-weekdays3': "Mon\nTue\nWed\nThu\nFri\nSat\nSun"
+    ,'en-weekdays3': "mon\ntue\nwed\nthu\nfri\nsat\nsun"
+    ,'en-weekdays3_cap': "Mon\nTue\nWed\nThu\nFri\nSat\nSun"
     ,'en-weekdays3_up': "MON\nTUE\nWED\nTHU\nFRI\nSAT\nSUN"
-    ,'en-weekdays2': "Mo\nTu\nWe\nTh\nFr\nSa\nSu"
+    ,'en-weekdays2': "mo\ntu\nwe\nth\nfr\nsa\nsu"
+    ,'en-weekdays2_cap': "Mo\nTu\nWe\nTh\nFr\nSa\nSu"
     ,'en-weekdays2_up': "MO\nTU\nWE\nTH\nFR\nSA\nSU"
     
-    ,'ru-monts': "Январь\nФевраль\nМарт\nАпрель\nМай\nИюнь\nИюль\nАвгуст\nСентябрь\nОктябрь\nНоябрь\nДекабрь"
+    ,'ru-monts': "январь\nфевраль\nмарт\nапрель\nмай\nиюнь\nиюль\nавгуст\nсентябрь\nоктябрь\nноябрь\nдекабрь"
+    ,'ru-monts_cap': "Январь\nФевраль\nМарт\nАпрель\nМай\nИюнь\nИюль\nАвгуст\nСентябрь\nОктябрь\nНоябрь\nДекабрь"
     ,'ru-monts_up': "ЯНВАРЬ\nФЕВРАЛЬ\nМАРТ\nАПРЕЛЬ\nМАЙ\nИЮНЬ\nИЮЛЬ\nАВГУСТ\nСЕНТЯБРЬ\nОКТЯБРЬ\nНОЯБРЬ\nДЕКАБРЬ"
-    ,'ru-monts3': "Янв\nФев\nМар\nАпр\nМай\nИюн\nИюл\nАвг\nСен\nОкт\nНоя\nДек"
+    ,'ru-monts3': "янв\nфев\nмар\nапр\nмай\nиюн\nиюл\nавг\nсен\nокт\nноя\nдек"
+    ,'ru-monts3_cap': "Янв\nФев\nМар\nАпр\nМай\nИюн\nИюл\nАвг\nСен\nОкт\nНоя\nДек"
     ,'ru-monts3_up': "ЯНВ\nФЕВ\nМАР\nАПР\nМАЙ\nИЮН\nИЮЛ\nАВГ\nСЕН\nОКТ\nНОЯ\nДЕК"
-    ,'ru-weekdays': "Понедельник\nВторник\nСреда\nЧетверг\nПятница\nСуббота\nВоскресенье"
+    ,'ru-weekdays': "понедельник\nвторник\nсреда\nчетверг\nпятница\nсуббота\nвоскресенье"
+    ,'ru-weekdays_cap': "Понедельник\nВторник\nСреда\nЧетверг\nПятница\nСуббота\nВоскресенье"
     ,'ru-weekdays_up': "ПОНЕДЕЛЬНИК\nВТОРНИК\nСРЕДА\nЧЕТВЕРГ\nПЯТНИЦА\nСУББОТА\nВОСКРЕСЕНЬЕ"
     ,'ru-weekdays3': "пнд\nвтр\nсрд\nчтв\nптн\nсбт\nвск"
+    ,'ru-weekdays3_cap': "Пнд\nВтр\nСрд\nЧтв\nПтн\nСбт\nВск"
     ,'ru-weekdays3_up': "ПНД\nВТР\nСРД\nЧТВ\nПТН\nСБТ\nВСК"
     ,'ru-weekdays2': "пн\nвт\nср\nчт\nпт\nсб\nвс"
+    ,'ru-weekdays2_cap': "Пн\nВт\nСр\nЧт\nПт\nСб\nВс"
     ,'ru-weekdays2_up': "ПН\nВТ\nСР\nЧТ\nПТ\nСБ\nВС"
 }
 
+setText()
 
 function setText() {
-    textarea.value = textBlocks[textBlockElement.value]
+    textarea.value = textBlocks[textBlockElement.value + textVarElement.value]
     drawText()
 }
 
@@ -81,10 +92,6 @@ function drawText() {
     removeAllChildNodes(canvasContainer);
     canvasArray = []
 
-    const alignment = alignElement.value;
-    fontSize = Number(fontSizeElement.value);
-    fontStyle = fontStyleElement.value;
-
     var x = 0;
     var y = 0;
     var lines = textarea.value.split('\n');
@@ -99,16 +106,13 @@ function drawText() {
         ctx.filter = "url(#remove-alpha)";
     }
 
-
-    if (font) ctx.font = fontStyle + ' ' + fontSize + "px custom-font"
-    else ctx.font = fontStyle + ' ' + fontSize + "px sans-serif";
-
+    ctx.font = getFont();
     ctx.textBaseline = "top";
 
     // find max line height and text width
     for (var i = 0; i < lines.length; i++) {
         let metrics = ctx.measureText(lines[i]);
-        let linewidth = metrics.actualBoundingBoxRight + metrics.actualBoundingBoxLeft
+        let linewidth = metrics.width
         let fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
 
         if (linewidth > maxWidth) maxWidth = linewidth
@@ -122,17 +126,15 @@ function drawText() {
         canvas.width = maxWidth
         canvas.height = lineheight
         canvas.id = i;
+        ctx.font = getFont();
         ctx.textBaseline = "top";
 
         if (!backgroundtransparentElement.checked) {
             ctx.fillStyle = backgroundcolorElement.value
             ctx.fillRect(0, 0, maxWidth, lineheight)
         }
-        ctx.fillStyle = textcolorElement.value
-
-        if (font) ctx.font = fontStyle + ' ' + fontSize + "px custom-font"
-        else ctx.font = fontStyle + ' ' + fontSize + "px sans-serif";
-
+        ctx.fillStyle = textcolorElement.value     
+        
         if (!smoothElement.checked) ctx.filter = "url(#remove-alpha)";
 
         ctx.textAlign = alignElement.value;
@@ -149,6 +151,13 @@ function drawText() {
 
     document.getElementById("lineHeight").innerHTML = lineheight;
     document.getElementById("lineWidth").innerHTML = Math.ceil(maxWidth);
+}
+
+function getFont() {
+    const fontSize = Number(fontSizeElement.value);
+    const fontStyle = fontStyleElement.value;
+    if (font) return fontStyle + ' ' + fontSize + 'px custom-font'
+    else return `${fontStyle} ${fontSize}px "${fontBuiltInElement.value}"`;
 }
 
 function pad(num, size) {
