@@ -14,6 +14,7 @@ const fontStyleElement = document.getElementById("font-style")
 const fontBuiltInElement = document.getElementById("font-builtin")
 const textBlockElement = document.getElementById("text-block")
 const textVarElement = document.getElementById("text-var")
+const letterSpacingElement = document.getElementById("letterSpacing")
 
 var canvasArray = []
 let font;
@@ -97,6 +98,7 @@ function drawText() {
     var lines = textarea.value.split('\n');
     var maxWidth = 0;
     var lineheight = 0;
+    var spacing = letterSpacingElement.value + "px";
 
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext("2d");
@@ -108,6 +110,7 @@ function drawText() {
 
     ctx.font = getFont();
     ctx.textBaseline = "top";
+    ctx.letterSpacing = spacing;
 
     // find max line height and text width
     for (var i = 0; i < lines.length; i++) {
@@ -128,6 +131,7 @@ function drawText() {
         canvas.id = i;
         ctx.font = getFont();
         ctx.textBaseline = "top";
+        ctx.letterSpacing = spacing;
 
         if (!backgroundtransparentElement.checked) {
             ctx.fillStyle = backgroundcolorElement.value
