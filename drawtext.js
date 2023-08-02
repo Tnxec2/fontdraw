@@ -16,7 +16,6 @@ const textBlockElement = document.getElementById("text-block")
 const textVarElement = document.getElementById("text-var")
 const letterSpacingElement = document.getElementById("letterSpacing")
 
-var canvasArray = []
 let font;
 
 textBlocks = { 
@@ -147,10 +146,10 @@ function drawText() {
         ctx.fillText(lines[i], x, 0);
 
         if (!backgroundtransparentElement.checked && removeblackElement.checked) removeColor(ctx, canvas, backgroundcolorElement.value)
-        var div = document.createElement('div');
-        div.appendChild(canvas)
-        canvasContainer.appendChild(div);
-        canvasArray.push(canvas);
+        //var div = document.createElement('div');
+        //div.appendChild(canvas)
+        canvasContainer.appendChild(canvas);
+        //canvasArray.push(canvas);
     }
 
     document.getElementById("lineHeight").innerHTML = lineheight;
@@ -199,24 +198,47 @@ function removeAllChildNodes(parent) {
     }
 }
 
-function downloadAll() {
-    for (var i = 0; i < canvasArray.length; i++) {
-        downloadCanvasAsImage(canvasArray[i])
+async function downloadAll() {
+    for (const node of canvasContainer.childNodes) {
+        downloadCanvasAsImage(node)
+        
+        await pause(200)
     }
 }
 
 function downloadCanvasAsImage(canvas) {
-    let downloadLink = document.createElement('a');
-
+    var image = canvas.toDataURL();
+    var aDownloadLink = document.createElement('a');
     var prefix = prefixnameElement.value && prefixnameElement.value.length > 0 ? prefixnameElement.value + '_' : '';
     var sIndex = startindexElement.value && startindexElement.value.length > 0 ? (Number(startindexElement.value)) : 0;
     var num = pad(sIndex + Number(canvas.id), 4);
+    var filename = '' + prefix + num + '.png';
+    // Add the name of the file to the link
+    aDownloadLink.download = filename;
+    // Attach the data to the link
+    aDownloadLink.href = image;
+    // Get the code to click the download link
+    aDownloadLink.click();
+    // canvas.toBlob(function (blob) {
+    //     var prefix = prefixnameElement.value && prefixnameElement.value.length > 0 ? prefixnameElement.value + '_' : '';
+    //     var sIndex = startindexElement.value && startindexElement.value.length > 0 ? (Number(startindexElement.value)) : 0;
+    //     var num = pad(sIndex + Number(canvas.id), 4);
+    //     var filename = prefix + num + '.png'
+    //     let downloadLink = document.createElement('a');
+    //     console.log(downloadLink);
+    //     downloadLink.setAttribute('download', filename);
+    //     let url = URL.createObjectURL(blob);
+    //     downloadLink.setAttribute('href', url);
+    //     document.body.appendChild(downloadLink);
+    //     downloadLink.click();
+    //     document.body.removeChild(downloadLink);
+    // });
+}
 
-    downloadLink.setAttribute('download', prefix + num + '.png');
-
-    canvas.toBlob(function (blob) {
-        let url = URL.createObjectURL(blob);
-        downloadLink.setAttribute('href', url);
-        downloadLink.click();
-    });
+function pause(msec) {
+    return new Promise(
+        (resolve, reject) => {
+            setTimeout(resolve, msec || 1000);
+        }
+    );
 }
