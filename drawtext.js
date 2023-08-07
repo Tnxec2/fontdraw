@@ -15,6 +15,7 @@ const fontBuiltInElement = document.getElementById("font-builtin")
 const textBlockElement = document.getElementById("text-block")
 const textVarElement = document.getElementById("text-var")
 const letterSpacingElement = document.getElementById("letterSpacing")
+const rotateElement = document.getElementById("rotate")
 
 let font;
 
@@ -121,20 +122,26 @@ function drawText() {
         if (fontHeight > lineheight) lineheight = fontHeight
     }
 
+    maxWidth = Math.ceil(maxWidth)
+    lineheight = Math.ceil(lineheight)
+
+    const angle = Number(rotateElement.value) || 0
+    const rotatedSize = getRotatedSize(maxWidth, lineheight, angle)
+
     // draw each line in canvas
     for (var i = 0; i < lines.length; i++) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext("2d");
-        canvas.width = maxWidth
-        canvas.height = lineheight
+        canvas.width = rotatedSize[0]
+        canvas.height = rotatedSize[1]
         canvas.id = i;
         ctx.font = getFont();
-        ctx.textBaseline = "top";
+        ctx.textBaseline = "Middle";
         ctx.letterSpacing = spacing;
 
         if (!backgroundtransparentElement.checked) {
             ctx.fillStyle = backgroundcolorElement.value
-            ctx.fillRect(0, 0, maxWidth, lineheight)
+            ctx.fillRect(0, 0, rotatedSize[0], rotatedSize[1])
         }
         ctx.fillStyle = textcolorElement.value     
         
@@ -143,7 +150,15 @@ function drawText() {
         ctx.textAlign = alignElement.value;
         x = alignElement.value === 'center' ? maxWidth / 2 : alignElement.value === 'end' ? maxWidth : 0
 
-        ctx.fillText(lines[i], x, 0);
+        ctx.save();
+        ctx.translate(rotatedSize[0] / 2, rotatedSize[1]/2)
+        ctx.rotate(angle * (Math.PI / 180));
+        let xToOrigin = x - maxWidth / 2
+        ctx.fillText(lines[i],  xToOrigin, 0);
+        // draw textborder text border
+        // ctx.strokeStyle = 'red';
+        // ctx.strokeRect( -maxWidth / 2, -lineheight/2, maxWidth, lineheight )
+        ctx.restore();
 
         if (!backgroundtransparentElement.checked && removeblackElement.checked) removeColor(ctx, canvas, backgroundcolorElement.value)
         //var div = document.createElement('div');
@@ -152,8 +167,8 @@ function drawText() {
         //canvasArray.push(canvas);
     }
 
-    document.getElementById("lineHeight").innerHTML = lineheight;
-    document.getElementById("lineWidth").innerHTML = Math.ceil(maxWidth);
+    document.getElementById("lineHeight").innerHTML = rotatedSize[1];
+    document.getElementById("lineWidth").innerHTML = rotatedSize[0];
 }
 
 function getFont() {
@@ -241,4 +256,24 @@ function pause(msec) {
             setTimeout(resolve, msec || 1000);
         }
     );
+}
+
+function getRotatedSize(width, height, angle){
+    angle = Math.abs(angle)
+    if (angle == 0 || angle % 180 == 0) return [width, height]
+    if (angle % 90 == 0) return [height, width]
+
+    let w = width
+    let h = height
+    angle = angle % 180
+    if (angle > 90) {
+        h = width
+        w = height
+        angle = angle - 90
+    }
+    var radians = (Math.PI / 180) * angle
+    let cos = Math.cos(radians)
+    let sin = Math.sin(radians)
+    return [  Math.ceil((w * cos) + (h * sin)), Math.ceil((w * sin) + (h * cos))]
+
 }

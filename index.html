@@ -22,6 +22,7 @@
     }
     #canvasContainer > * {
       display: block;
+      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -114,6 +115,9 @@
             <option value="center">Center</option>
             <option value="end">Right</option>
           </select>
+          <span class="input-group-text">Rotate</span>
+          <input type="number" class="form-control form-control-sm" id="rotate" name="rotate" step="1"
+            value="0" onchange="drawText()">
         </div>
     
         <div class="input-group input-group-sm mb-1">
@@ -163,7 +167,7 @@
           <span>Line width:</span>
           <span id="lineWidth"></span>
         </div>
-        <div id="canvasContainer" class="mb-3"></div>
+        <div id="canvasContainer" class="canvascontainer mb-3"></div>
       </div>
     </div>
 
