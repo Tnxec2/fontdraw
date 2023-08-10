@@ -132,8 +132,8 @@ function drawText() {
     for (var i = 0; i < lines.length; i++) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext("2d");
-        canvas.width = rotatedSize[0]
-        canvas.height = rotatedSize[1]
+        canvas.width = rotatedSize[0]+1
+        canvas.height = rotatedSize[1]+1
         canvas.id = i;
         ctx.font = getFont();
         ctx.textBaseline = "Middle";
@@ -141,7 +141,7 @@ function drawText() {
 
         if (!backgroundtransparentElement.checked) {
             ctx.fillStyle = backgroundcolorElement.value
-            ctx.fillRect(0, 0, rotatedSize[0], rotatedSize[1])
+            ctx.fillRect(0, 0, rotatedSize[0]+1, rotatedSize[1]+1)
         }
         ctx.fillStyle = textcolorElement.value     
         
@@ -154,7 +154,7 @@ function drawText() {
         ctx.translate(rotatedSize[0] / 2, rotatedSize[1]/2)
         ctx.rotate(angle * (Math.PI / 180));
         let xToOrigin = x - maxWidth / 2
-        ctx.fillText(lines[i],  xToOrigin, 0);
+        ctx.fillText(lines[i],  xToOrigin, 1);
         // draw textborder text border
         // ctx.strokeStyle = 'red';
         // ctx.strokeRect( -maxWidth / 2, -lineheight/2, maxWidth, lineheight )
