@@ -16,6 +16,11 @@ const textBlockElement = document.getElementById("text-block")
 const textVarElement = document.getElementById("text-var")
 const letterSpacingElement = document.getElementById("letterSpacing")
 const rotateElement = document.getElementById("rotate")
+const textincircleElement = document.getElementById("textincircle")
+const circlewidthElement = document.getElementById("circlewidth")
+const circleheightElement = document.getElementById("circleheight")
+const circleradiusElement = document.getElementById("circleradius")
+const circlerotateElement = document.getElementById("circlerotate")
 
 let font;
 
@@ -66,6 +71,14 @@ function setText() {
 function handleTransparentClick() {
     backgroundcolorElement.disabled = backgroundtransparentElement.checked;
     removeblackElement.disabled = backgroundtransparentElement.checked;
+    drawText()
+}
+
+function handleTextInCircleClick() {
+    circlewidthElement.disabled = !textincircleElement.checked;
+    circleheightElement.disabled = !textincircleElement.checked;
+    circleradiusElement.disabled = !textincircleElement.checked;
+    circlerotateElement.disabled = !textincircleElement.checked;
     drawText()
 }
 
@@ -132,8 +145,8 @@ function drawText() {
     for (var i = 0; i < lines.length; i++) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext("2d");
-        canvas.width = rotatedSize[0]+1
-        canvas.height = rotatedSize[1]+1
+        canvas.width = textincircleElement.checked ? (Number(circlewidthElement.value) || 100) : rotatedSize[0]+1
+        canvas.height = textincircleElement.checked ? (Number(circleheightElement.value) || 100) : rotatedSize[1]+1
         canvas.id = i;
         ctx.font = getFont();
         ctx.textBaseline = "Middle";
@@ -141,24 +154,23 @@ function drawText() {
 
         if (!backgroundtransparentElement.checked) {
             ctx.fillStyle = backgroundcolorElement.value
-            ctx.fillRect(0, 0, rotatedSize[0]+1, rotatedSize[1]+1)
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
         }
         ctx.fillStyle = textcolorElement.value     
         
         if (!smoothElement.checked) ctx.filter = "url(#remove-alpha)";
 
-        ctx.textAlign = alignElement.value;
-        x = alignElement.value === 'center' ? maxWidth / 2 : alignElement.value === 'end' ? maxWidth : 0
+        if (textincircleElement.checked) {
+            ctx.textAlign = 'left';
+            radius = Number(circleradiusElement.value) || 10
+            startRotation = Number(circlerotateElement.value) || 0
+            fillTextCircle(ctx, lines[i], radius, startRotation, Number(letterSpacingElement.value)| 0, maxWidth)
+        } else {
+            ctx.textAlign = alignElement.value;
+            x = alignElement.value === 'center' ? maxWidth / 2 : alignElement.value === 'end' ? maxWidth : 0
+            fillTextNormal(ctx, lines[i], rotatedSize, x, y, maxWidth, lineheight, angle)
+        }
 
-        ctx.save();
-        ctx.translate(rotatedSize[0] / 2, rotatedSize[1]/2)
-        ctx.rotate(angle * (Math.PI / 180));
-        let xToOrigin = x - maxWidth / 2
-        ctx.fillText(lines[i],  xToOrigin, 1);
-        // draw textborder text border
-        // ctx.strokeStyle = 'red';
-        // ctx.strokeRect( -maxWidth / 2, -lineheight/2, maxWidth, lineheight )
-        ctx.restore();
 
         if (!backgroundtransparentElement.checked && removeblackElement.checked) removeColor(ctx, canvas, backgroundcolorElement.value)
         //var div = document.createElement('div');
@@ -169,6 +181,46 @@ function drawText() {
 
     document.getElementById("lineHeight").innerHTML = rotatedSize[1];
     document.getElementById("lineWidth").innerHTML = rotatedSize[0];
+}
+
+
+function fillTextNormal(ctx, text, rotatedSize, x, y, maxWidth, lineHeight,  angle) {
+    ctx.save();
+    ctx.translate(rotatedSize[0] / 2, rotatedSize[1]/2)
+    ctx.rotate(angle * (Math.PI / 180));
+    let xToOrigin = x - maxWidth / 2
+    ctx.fillText(text,  xToOrigin, 1);
+    // draw textborder text border
+    // ctx.strokeStyle = 'red';
+    // ctx.strokeRect( -maxWidth / 2, -lineheight/2, maxWidth, lineheight )
+    ctx.restore();
+}
+
+
+function fillTextCircle(ctx, text, radius, startRotation, spacing, maxWidth) {
+    // var numRadsPerLetter = (Math.PI / 180) * spacing;
+    let x = ctx.canvas.width / 2
+    let y = ctx.canvas.height / 2
+    ctx.save();
+    ctx.translate(x, y);
+    
+    let textWidth = ctx.measureText(text).width;
+    let startPadding = alignElement.value === 'center' ? ( maxWidth - textWidth) / 2  : alignElement.value === 'end' ? maxWidth - textWidth : 0;
+    let startPaddingAngle = startPadding * 180 / (radius * Math.PI);
+
+    ctx.rotate( (Math.PI / 180) * ( startRotation + startPaddingAngle));
+
+    clockwise = 1 // 1 or -1
+
+    for (var i = 0; i < text.length; i++) {
+        ctx.save();
+        let width = ctx.measureText(text[i]).width;
+        ctx.fillText(text[i], 0, -1 * clockwise * radius);
+        let sp = width + spacing;
+        let spacingAngle = sp * 180 / (radius * Math.PI);
+        ctx.rotate( Math.PI / 180 * clockwise * spacingAngle );
+    }
+    ctx.restore();
 }
 
 function getFont() {

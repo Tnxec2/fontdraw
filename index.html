@@ -119,6 +119,32 @@
           <input type="number" class="form-control form-control-sm" id="rotate" name="rotate" step="1"
             value="0" onchange="drawText()">
         </div>
+
+
+        <div class="input-group input-group-sm mb-1">
+          <div class="input-group-text">
+            <input type="checkbox" class="form-check-input me-3" id="textincircle" name="textincircle" value="textincircle"
+              onclick="handleTextInCircleClick()">
+            <label class="form-check-label" for="textincircle"> draw text on circle</label>
+          </div>
+
+          <span class="input-group-text">Canvas Size</span>
+          <span class="input-group-text">width</span>
+          <input type="number" class="form-control form-control-sm" id="circlewidth" name="circlewidth" step="1"
+            value="240" onchange="drawText()" disabled />
+
+          <span class="input-group-text">height</span>
+          <input type="number" class="form-control form-control-sm" id="circleheight" name="circleheight" step="1"
+            value="280" onchange="drawText()" disabled />
+
+          <span class="input-group-text">Radius</span>
+          <input type="number" class="form-control form-control-sm" id="circleradius" name="circleradius" step="1"
+            value="124" onchange="drawText()" disabled />
+
+          <span class="input-group-text">Rotate</span>
+          <input type="number" class="form-control form-control-sm" id="circlerotate" name="circlerotate" step="1"
+            value="0" onchange="drawText()" disabled />
+        </div>
     
         <div class="input-group input-group-sm mb-1">
           <div class="input-group-text">
