@@ -14,13 +14,20 @@ const fontStyleElement = document.getElementById("font-style")
 const fontBuiltInElement = document.getElementById("font-builtin")
 const textBlockElement = document.getElementById("text-block")
 const textVarElement = document.getElementById("text-var")
+
 const letterSpacingElement = document.getElementById("letterSpacing")
 const rotateElement = document.getElementById("rotate")
+
+const canvaswidthElement = document.getElementById("canvaswidth")
+const canvasheightElement = document.getElementById("canvasheight")
+const canvastopElement = document.getElementById("canvastop")
+const canvasleftElement = document.getElementById("canvasleft")
+
 const textincircleElement = document.getElementById("textincircle")
-const circlewidthElement = document.getElementById("circlewidth")
-const circleheightElement = document.getElementById("circleheight")
+const circlexElement = document.getElementById("circlex")
+const circleyElement = document.getElementById("circley")
 const circleradiusElement = document.getElementById("circleradius")
-const circlerotateElement = document.getElementById("circlerotate")
+const warningcircletextElement = document.getElementById("warningcircletext")
 
 let font;
 
@@ -75,10 +82,10 @@ function handleTransparentClick() {
 }
 
 function handleTextInCircleClick() {
-    circlewidthElement.disabled = !textincircleElement.checked;
-    circleheightElement.disabled = !textincircleElement.checked;
+    circlexElement.disabled = !textincircleElement.checked;
+    circleyElement.disabled = !textincircleElement.checked;
     circleradiusElement.disabled = !textincircleElement.checked;
-    circlerotateElement.disabled = !textincircleElement.checked;
+    warningcircletextElement.style = textincircleElement.checked ? 'display: block': 'display:none'
     drawText()
 }
 
@@ -89,6 +96,14 @@ function removeCustomFont() {
         font = null;
         drawText()
     }
+}
+
+function clearCustomCavasSize() {
+    canvaswidthElement.value = 0;
+    canvasheightElement.value = 0;
+    canvastopElement.value = 0;
+    canvasleftElement.value = 0;
+    drawText();
 }
 
 fontInputElement.addEventListener("input", async () => {
@@ -112,6 +127,11 @@ function drawText() {
     var maxWidth = 0;
     var lineheight = 0;
     var spacing = letterSpacingElement.value + "px";
+
+    let customCanvasWidth = Number(canvaswidthElement.value) || null
+    let customCanvasHeight = Number(canvasheightElement.value) || null
+    let customCanvasTop = Number(canvastopElement.value) || 0
+    let customCanvasLeft = Number(canvasleftElement.value) || 0
 
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext("2d");
@@ -141,12 +161,15 @@ function drawText() {
     const angle = Number(rotateElement.value) || 0
     const rotatedSize = getRotatedSize(maxWidth, lineheight, angle)
 
+    let canvasWidth = customCanvasWidth || rotatedSize[0]+1
+    let canvasHeight = customCanvasHeight || rotatedSize[1]+1
+
     // draw each line in canvas
     for (var i = 0; i < lines.length; i++) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext("2d");
-        canvas.width = textincircleElement.checked ? (Number(circlewidthElement.value) || 100) : rotatedSize[0]+1
-        canvas.height = textincircleElement.checked ? (Number(circleheightElement.value) || 100) : rotatedSize[1]+1
+        canvas.width = canvasWidth
+        canvas.height = canvasHeight
         canvas.id = i;
         ctx.font = getFont();
         ctx.textBaseline = "Middle";
@@ -163,44 +186,42 @@ function drawText() {
         if (textincircleElement.checked) {
             ctx.textAlign = 'left';
             radius = Number(circleradiusElement.value) || 10
-            startRotation = Number(circlerotateElement.value) || 0
-            fillTextCircle(ctx, lines[i], radius, startRotation, Number(letterSpacingElement.value)| 0, maxWidth)
+            startRotation = Number(rotateElement.value) || 0
+            fillTextCircle(ctx, lines[i], radius, startRotation, Number(letterSpacingElement.value) | 0, maxWidth)
         } else {
             ctx.textAlign = alignElement.value;
             x = alignElement.value === 'center' ? maxWidth / 2 : alignElement.value === 'end' ? maxWidth : 0
-            fillTextNormal(ctx, lines[i], rotatedSize, x, y, maxWidth, lineheight, angle)
+            fillTextNormal(ctx, lines[i], rotatedSize, customCanvasLeft + x, customCanvasTop + y, maxWidth, angle)
         }
 
 
         if (!backgroundtransparentElement.checked && removeblackElement.checked) removeColor(ctx, canvas, backgroundcolorElement.value)
-        //var div = document.createElement('div');
-        //div.appendChild(canvas)
+
         canvasContainer.appendChild(canvas);
-        //canvasArray.push(canvas);
     }
 
-    document.getElementById("lineHeight").innerHTML = rotatedSize[1];
-    document.getElementById("lineWidth").innerHTML = rotatedSize[0];
+    document.getElementById("lineHeight").innerHTML = canvasHeight;
+    document.getElementById("lineWidth").innerHTML = canvasWidth;
 }
 
 
-function fillTextNormal(ctx, text, rotatedSize, x, y, maxWidth, lineHeight,  angle) {
+function fillTextNormal(ctx, text, rotatedSize, x, y, maxWidth,  angle) {
     ctx.save();
     ctx.translate(rotatedSize[0] / 2, rotatedSize[1]/2)
     ctx.rotate(angle * (Math.PI / 180));
     let xToOrigin = x - maxWidth / 2
-    ctx.fillText(text,  xToOrigin, 1);
-    // draw textborder text border
-    // ctx.strokeStyle = 'red';
-    // ctx.strokeRect( -maxWidth / 2, -lineheight/2, maxWidth, lineheight )
+    ctx.fillText(text,  xToOrigin, y + 1);
     ctx.restore();
 }
 
 
 function fillTextCircle(ctx, text, radius, startRotation, spacing, maxWidth) {
-    // var numRadsPerLetter = (Math.PI / 180) * spacing;
-    let x = ctx.canvas.width / 2
-    let y = ctx.canvas.height / 2
+    let customCenterX = Number(circlexElement.value) || 0
+    let customCenterY = Number(circleyElement.value) || 0
+    let x = (customCenterX!=0 || customCenterY!=0) ? customCenterX : ctx.canvas.width / 2
+    let y = (customCenterX!=0 || customCenterY!=0) ? customCenterY : ctx.canvas.height / 2
+    x += Number(canvasleftElement.value) || 0
+    y += Number(canvastopElement.value) || 0
     ctx.save();
     ctx.translate(x, y);
     

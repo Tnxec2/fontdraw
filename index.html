@@ -120,6 +120,27 @@
             value="0" onchange="drawText()">
         </div>
 
+        <div class="input-group input-group-sm mb-1">
+          <span class="input-group-text">Canvas Size</span>
+          <span class="input-group-text">width</span>
+          <input type="number" class="form-control form-control-sm" id="canvaswidth" name="canvaswidth" step="1"
+            value="0" onchange="drawText()" />
+
+          <span class="input-group-text">height</span>
+          <input type="number" class="form-control form-control-sm" id="canvasheight" name="canvasheight" step="1"
+            value="0" onchange="drawText()" />
+
+          <span class="input-group-text">top</span>
+          <input type="number" class="form-control form-control-sm" id="canvastop" name="canvastop" step="1"
+            value="0" onchange="drawText()" />
+
+          <span class="input-group-text">left</span>
+          <input type="number" class="form-control form-control-sm" id="canvasleft" name="canvasleft" step="1"
+            value="0" onchange="drawText()" />
+
+          
+            <button type="button" class="btn btn-danger" onclick="clearCustomCavasSize()" title="clear canvas size">x</button>
+        </div>
 
         <div class="input-group input-group-sm mb-1">
           <div class="input-group-text">
@@ -128,22 +149,19 @@
             <label class="form-check-label" for="textincircle"> draw text on circle</label>
           </div>
 
-          <span class="input-group-text">Canvas Size</span>
-          <span class="input-group-text">width</span>
-          <input type="number" class="form-control form-control-sm" id="circlewidth" name="circlewidth" step="1"
-            value="240" onchange="drawText()" disabled />
+          <span class="input-group-text" id="warningcircletext" title="you should set canvas size manually" style="display: none;">⚠️</span>
+          <span class="input-group-text">Center</span>
+          <span class="input-group-text">x</span>
+          <input type="number" class="form-control form-control-sm" id="circlex" name="circlex" step="1"
+            value="0" onchange="drawText()" disabled />
 
-          <span class="input-group-text">height</span>
-          <input type="number" class="form-control form-control-sm" id="circleheight" name="circleheight" step="1"
-            value="280" onchange="drawText()" disabled />
+          <span class="input-group-text">y</span>
+          <input type="number" class="form-control form-control-sm" id="circley" name="circley" step="1"
+            value="0" onchange="drawText()" disabled />
 
           <span class="input-group-text">Radius</span>
           <input type="number" class="form-control form-control-sm" id="circleradius" name="circleradius" step="1"
-            value="124" onchange="drawText()" disabled />
-
-          <span class="input-group-text">Rotate</span>
-          <input type="number" class="form-control form-control-sm" id="circlerotate" name="circlerotate" step="1"
-            value="0" onchange="drawText()" disabled />
+            value="10" onchange="drawText()" disabled />
         </div>
     
         <div class="input-group input-group-sm mb-1">
