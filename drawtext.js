@@ -50,6 +50,25 @@ textBlocks = {
     ,'en-weekdays2': "mo\ntu\nwe\nth\nfr\nsa\nsu"
     ,'en-weekdays2_cap': "Mo\nTu\nWe\nTh\nFr\nSa\nSu"
     ,'en-weekdays2_up': "MO\nTU\nWE\nTH\nFR\nSA\nSU"
+
+    ,'de-monts': "januar\nfebruar\nmärz\napril\nmai\njuni\njuli\naugust\nseptember\noktober\nnovember\ndezember"
+    ,'de-monts_cap': "Januar\nFebruar\nMärz\nApril\nMai\nJuni\nJuli\nAugust\nSeptember\nOktober\nNovember\nDezember"
+    ,'de-monts_up': "JANUAR\nFEBRUAR\nMÄRZ\nAPRIL\nMAI\nJUNI\nJULI\nAUGUST\nSEPTEMBER\nOKTOBER\nNOVEMBER\nDEZEMBER"
+    ,'de-monts3': "jan\nfeb\nmärz\napr\nmai\njun\njul\naug\nsept\nokt\nnov\ndez"
+    ,'de-monts3_cap': "Jan\nFeb\nMärz\nApr\nMai\nJun\nJul\nAug\nSept\nOkt\nNov\nDez"
+    ,'de-monts3_up': "JAN\nFEB\nMÄRZ\nAPR\nMAI\nJUN\nJUL\nAUG\nSEPT\nOKT\nNOV\nDEZ"
+
+    ,'de-weekdays': "montag\ndienstag\nmittwoch\ndonnerstag\nfreitag\nsamstag\nsonntag"
+    ,'de-weekdays_cap': "Montag\nDienstag\nMittwoch\nDonnerstag\nFreitag\nSamstag\nSonntag"
+    ,'de-weekdays_up': "MONTAG\nDIENSTAG\nMITTWOCH\nDONNERSTAG\nFREITAG\nSAMSTAG\nSONNTAG"
+
+    ,'de-weekdays3': "mon\ndie\nmit\ndon\nfre\nsam\nson"
+    ,'de-weekdays3_cap': "Mon\nDie\nMit\nDon\nFre\nSam\nSon"
+    ,'de-weekdays3_up': "MON\nDIE\nMIT\nDON\nFRE\nSAM\nSON"
+
+    ,'de-weekdays2': "mo\ndi\nmi\ndo\nfr\nsa\nso"
+    ,'de-weekdays2_cap': "Mo\nDi\nMi\nDo\nFr\nSa\nSo"
+    ,'de-weekdays2_up': "MO\nDI\nMI\nDO\nFR\nSA\nSO"
     
     ,'ru-monts': "январь\nфевраль\nмарт\nапрель\nмай\nиюнь\nиюль\nавгуст\nсентябрь\nоктябрь\nноябрь\nдекабрь"
     ,'ru-monts_cap': "Январь\nФевраль\nМарт\nАпрель\nМай\nИюнь\nИюль\nАвгуст\nСентябрь\nОктябрь\nНоябрь\nДекабрь"
