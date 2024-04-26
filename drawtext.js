@@ -11,6 +11,7 @@ const startindexElement = document.getElementById("startindex");
 const fontInputElement = document.getElementById("font-input")
 const fontSizeElement = document.getElementById("font-size")
 const fontStyleElement = document.getElementById("font-style")
+const fontStrechElement = document.getElementById("font-stretch")
 const fontBuiltInElement = document.getElementById("font-builtin")
 const textBlockElement = document.getElementById("text-block")
 const textVarElement = document.getElementById("text-var")
@@ -182,6 +183,7 @@ function drawText() {
     }
 
     ctx.font = getFont();
+    if (fontStrechElement.value) ctx.fontStretch = fontStrechElement.value
     ctx.textBaseline = "top";
     ctx.letterSpacing = spacing;
 
@@ -212,6 +214,7 @@ function drawText() {
         canvas.height = canvasHeight
         canvas.id = i;
         ctx.font = getFont();
+        if (fontStrechElement.value) ctx.fontStretch = fontStrechElement.value
         ctx.textBaseline = "Middle";
         ctx.letterSpacing = spacing;
 
@@ -287,8 +290,11 @@ function fillTextCircle(ctx, text, radius, startRotation, spacing, maxWidth) {
 function getFont() {
     const fontSize = Number(fontSizeElement.value);
     const fontStyle = fontStyleElement.value;
-    if (font) return fontStyle + ' ' + fontSize + 'px custom-font'
-    else return `${fontStyle} ${fontSize}px "${fontBuiltInElement.value}"`;
+    let f = ""
+    if (font) f = fontStyle + ' ' + fontSize + 'px custom-font'
+    else f = `${fontStyle} ${fontSize}px "${fontBuiltInElement.value}"`;
+    console.log(f);
+    return f;
 }
 
 function pad(num, size) {
