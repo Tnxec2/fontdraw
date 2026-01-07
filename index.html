@@ -201,7 +201,7 @@
           </div>
         </div>
     
-        <div class="input-group input-group-sm">
+        <div class="input-group input-group-sm mb-1">
           <div class="input-group-text">
             <input type="checkbox" class="form-check-input me-3" id="transparent" name="transparent" value="transparent"
               onclick="handleTransparentClick()">
@@ -210,7 +210,7 @@
           <div class="input-group-text">
             <label for="backgroundcolor" class="form-check-label me-3" id="labelbackgroundcolor"> Background color </label>
             <input type="color" class="form-control form-control-sm form-control-color" id="backgroundcolor"
-              name="backgroundcolor" value="#000000" onchange="drawText()">
+              name="backgroundcolor" value="#121212" onchange="drawText()">
           </div>
           <div class="input-group-text">
             <input type="checkbox" class="form-check-input me-3" id="removeblack" name="removeblack" value="removeblack" checked
@@ -218,7 +218,36 @@
             <label class="form-check-label" for="removeblack"> background color to alpha</label>
           </div>
         </div>
-      </div>  
+
+
+        <div class="input-group input-group-sm mb-1">
+          <div class="input-group-text">
+            <input type="checkbox" class="form-check-input me-3" id="shadow" name="shadow" value="shadow"
+              onclick="handleShadowClick()">
+            <label class="form-check-label" for="shadow">shadow</label>
+          </div>
+
+          <span class="input-group-text" id="warningshadowtext" title="you should set canvas size manually" style="display: none;">⚠️</span>
+
+          <div class="input-group-text">
+            <label for="shadowcolor" class="form-check-label me-3" id="labelshadowcolor">color</label>
+            <input type="color" class="form-control form-control-sm form-control-color" id="shadowcolor"
+              name="shadowcolor" value="#000000" onchange="drawText()">
+          </div>
+          <span class="input-group-text">Pan</span>
+          <span class="input-group-text">x</span>
+          <input type="number" class="form-control form-control-sm" id="shadowx" name="shadowx" step="1"
+            value="0" onchange="drawText()" disabled />
+
+          <span class="input-group-text">y</span>
+          <input type="number" class="form-control form-control-sm" id="shadowy" name="shadowy" step="1"
+            value="0" onchange="drawText()" disabled />
+
+          <span class="input-group-text">Radius</span>
+          <input type="number" class="form-control form-control-sm" id="shadowblur" name="shadowblur" step="1"
+            value="0" onchange="drawText()" disabled />
+        </div>
+      </div>
     </div>
 
     <div class="card mt-3">

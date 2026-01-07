@@ -30,6 +30,13 @@ const circleyElement = document.getElementById("circley")
 const circleradiusElement = document.getElementById("circleradius")
 const warningcircletextElement = document.getElementById("warningcircletext")
 
+const warningshadowtextElement = document.getElementById("warningshadowtext")
+const shadowcolorElement = document.getElementById("shadowcolor")
+const shadowblurElement = document.getElementById("shadowblur")
+const shadowxElement = document.getElementById("shadowx")
+const shadowyElement = document.getElementById("shadowy")
+const shadowElement = document.getElementById("shadow")
+
 let font;
 
 textBlocks = { 
@@ -130,6 +137,15 @@ function handleTextInCircleClick() {
     drawText()
 }
 
+function handleShadowClick() {
+    shadowcolorElement.disabled = !shadowElement.checked;
+    shadowblurElement.disabled = !shadowElement.checked;
+    shadowxElement.disabled = !shadowElement.checked;
+    shadowyElement.disabled = !shadowElement.checked;
+    warningshadowtextElement.style = shadowElement.checked ? 'display: block': 'display:none'
+    drawText()
+}
+
 function removeCustomFont() {
     if (font) {
         document.fonts.delete(font);
@@ -174,6 +190,12 @@ function drawText() {
     let customCanvasTop = Number(canvastopElement.value) || 0
     let customCanvasLeft = Number(canvasleftElement.value) || 0
 
+    let shadowEnabled = shadowElement.checked
+    let shadowColor = shadowcolorElement.value
+    let shadowBlur = Number(shadowblurElement.value) || 0
+    let shadowOffsetX = Number(shadowxElement.value) || 0
+    let shadowOffsetY = Number(shadowyElement.value) || 0
+
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext("2d");
     if (!smoothElement.checked) {
@@ -203,8 +225,8 @@ function drawText() {
     const angle = Number(rotateElement.value) || 0
     const rotatedSize = getRotatedSize(maxWidth, lineheight, angle)
 
-    let canvasWidth = customCanvasWidth || rotatedSize[0]+1
-    let canvasHeight = customCanvasHeight || rotatedSize[1]+1
+    let canvasWidth = customCanvasWidth || rotatedSize[0]+1+Math.abs(shadowOffsetX) + Math.abs(shadowBlur)
+    let canvasHeight = customCanvasHeight || rotatedSize[1]+Math.abs(shadowOffsetY) + Math.abs(shadowBlur)
 
     // draw each line in canvas
     for (var i = 0; i < lines.length; i++) {
@@ -223,6 +245,11 @@ function drawText() {
             ctx.fillRect(0, 0, canvas.width, canvas.height)
         }
         ctx.fillStyle = textcolorElement.value     
+
+        ctx.shadowColor = shadowEnabled ? shadowColor : 'transparent'
+        ctx.shadowBlur = shadowEnabled ? shadowBlur : 0
+        ctx.shadowOffsetX = shadowEnabled ? shadowOffsetX : 0
+        ctx.shadowOffsetY = shadowEnabled ? shadowOffsetY : 0
         
         if (!smoothElement.checked) ctx.filter = "url(#remove-alpha)";
 
@@ -234,6 +261,8 @@ function drawText() {
         } else {
             ctx.textAlign = alignElement.value;
             x = alignElement.value === 'center' ? maxWidth / 2 : alignElement.value === 'end' ? maxWidth : 0
+            if (shadowOffsetX < 0) x += Math.abs(shadowOffsetX) + Math.abs(shadowBlur)
+            if (shadowOffsetY < 0) y += Math.abs(shadowOffsetY) + Math.abs(shadowBlur)
             fillTextNormal(ctx, lines[i], rotatedSize, customCanvasLeft + x, customCanvasTop + y, maxWidth, angle)
         }
 
