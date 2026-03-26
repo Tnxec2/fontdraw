@@ -37,6 +37,11 @@ const shadowxElement = document.getElementById("shadowx")
 const shadowyElement = document.getElementById("shadowy")
 const shadowElement = document.getElementById("shadow")
 
+const drawTextOnBackgroundElement = document.getElementById("drawTextOnBackground")
+const textOnBackgroundColorElement = document.getElementById("textOnBackgroundColor")
+const backgroundTextElement = document.getElementById("backgroundText")
+
+
 let font;
 
 textBlocks = { 
@@ -127,6 +132,11 @@ function handleTransparentClick() {
     backgroundcolorElement.disabled = backgroundtransparentElement.checked;
     removeblackElement.disabled = backgroundtransparentElement.checked;
     drawText()
+}
+
+function handleDrawTextOnBackgroundClick() {
+    textOnBackgroundColorElement.disabled = !drawTextOnBackgroundElement.checked;
+    backgroundTextElement.disabled = !drawTextOnBackgroundElement.checked;
 }
 
 function handleTextInCircleClick() {
@@ -244,6 +254,24 @@ function drawText() {
             ctx.fillStyle = backgroundcolorElement.value
             ctx.fillRect(0, 0, canvas.width, canvas.height)
         }
+
+        if (drawTextOnBackgroundElement.checked) {
+            ctx.fillStyle = textOnBackgroundColorElement.value
+            var textOnBackground = backgroundTextElement.value
+            if (textincircleElement.checked) {
+                ctx.textAlign = 'left';
+                radius = Number(circleradiusElement.value) || 10
+                startRotation = Number(rotateElement.value) || 0
+                fillTextCircle(ctx, textOnBackground, radius, startRotation, Number(letterSpacingElement.value) | 0, maxWidth)
+            } else {
+                ctx.textAlign = alignElement.value;
+                x = alignElement.value === 'center' ? maxWidth / 2 : alignElement.value === 'end' ? maxWidth : 0
+                if (shadowOffsetX < 0) x += Math.abs(shadowOffsetX) + Math.abs(shadowBlur)
+                if (shadowOffsetY < 0) y += Math.abs(shadowOffsetY) + Math.abs(shadowBlur)
+                fillTextNormal(ctx, textOnBackground, rotatedSize, customCanvasLeft + x, customCanvasTop + y, maxWidth, angle)
+            }
+        }
+
         ctx.fillStyle = textcolorElement.value     
 
         ctx.shadowColor = shadowEnabled ? shadowColor : 'transparent'

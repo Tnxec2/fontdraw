@@ -18,7 +18,7 @@
       padding: 0.5em;
       border-radius: 0.5em;
       /* font-smooth: never;
-  -webkit-font-smoothing : none; */
+      -webkit-font-smoothing : none; */
     }
     #canvasContainer > * {
       display: block;
@@ -108,7 +108,7 @@
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text">Size, px</span>
           <input type="number" class="form-control form-control-sm" id="font-size" name="font-size" min="1" step="1"
-            value="20" onchange="drawText()">
+            value="20" oninput="drawText()" onmousewheel>
           <span class="input-group-text">Style</span>
           <select id="font-style" class="form-select" onchange="drawText()">
             <option value="normal">Normal</option>
@@ -131,7 +131,7 @@
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text">Spacing, px</span>
           <input type="number" class="form-control form-control-sm" id="letterSpacing" name="letterSpacing" step="1"
-            value="0" onchange="drawText()">
+            value="0" oninput="drawText()" onmousewheel>
           <span class="input-group-text">Text align</span>
     
           <select id="align" class="form-select" onchange="drawText()">
@@ -141,26 +141,26 @@
           </select>
           <span class="input-group-text">Rotate</span>
           <input type="number" class="form-control form-control-sm" id="rotate" name="rotate" step="1"
-            value="0" onchange="drawText()">
+            value="0" oninput="drawText()" onmousewheel>
         </div>
 
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text">Canvas Size</span>
           <span class="input-group-text">width</span>
           <input type="number" class="form-control form-control-sm" id="canvaswidth" name="canvaswidth" step="1"
-            value="0" onchange="drawText()" />
+            value="0" oninput="drawText()" onmousewheel />
 
           <span class="input-group-text">height</span>
           <input type="number" class="form-control form-control-sm" id="canvasheight" name="canvasheight" step="1"
-            value="0" onchange="drawText()" />
+            value="0" oninput="drawText()" onmousewheel />
 
           <span class="input-group-text">top</span>
           <input type="number" class="form-control form-control-sm" id="canvastop" name="canvastop" step="1"
-            value="0" onchange="drawText()" />
+            value="0" oninput="drawText()" onmousewheel/>
 
           <span class="input-group-text">left</span>
           <input type="number" class="form-control form-control-sm" id="canvasleft" name="canvasleft" step="1"
-            value="0" onchange="drawText()" />
+            value="0" oninput="drawText()" onmousewheel/>
 
           
             <button type="button" class="btn btn-danger" onclick="clearCustomCavasSize()" title="clear canvas size">x</button>
@@ -177,15 +177,15 @@
           <span class="input-group-text">Center</span>
           <span class="input-group-text">x</span>
           <input type="number" class="form-control form-control-sm" id="circlex" name="circlex" step="1"
-            value="0" onchange="drawText()" disabled />
+            value="0" oninput="drawText()" onmousewheel disabled />
 
           <span class="input-group-text">y</span>
           <input type="number" class="form-control form-control-sm" id="circley" name="circley" step="1"
-            value="0" onchange="drawText()" disabled />
+            value="0" oninput="drawText()" onmousewheel disabled />
 
           <span class="input-group-text">Radius</span>
           <input type="number" class="form-control form-control-sm" id="circleradius" name="circleradius" step="1"
-            value="10" onchange="drawText()" disabled />
+            value="10" oninput="drawText()" onmousewheel disabled />
         </div>
     
         <div class="input-group input-group-sm mb-1">
@@ -219,6 +219,21 @@
           </div>
         </div>
 
+        <div class="input-group input-group-sm mb-1">
+          <div class="input-group-text">
+            <input type="checkbox" class="form-check-input me-3" id="drawTextOnBackground" name="drawTextOnBackground" value="drawTextOnBackground"
+              onclick="handleDrawTextOnBackgroundClick()">
+            <label class="form-check-label" for="drawTextOnBackground"> draw text on background</label>
+          </div>
+          <div class="input-group-text">
+            <label for="textOnBackgroundColor" class="form-check-label me-3" id="labelTextOnBackgroundColor"> Color </label>
+            <input type="color" class="form-control form-control-sm form-control-color" id="textOnBackgroundColor"
+              name="textOnBackgroundColor" value="#292929" onchange="drawText()" disabled>
+          </div>
+          <span class="input-group-text">Text to draw on background</span>
+          <input type="text" class="form-control form-control-sm" id="backgroundText" name="backgroundText"
+            onchange="drawText()" disabled value="8"/>
+        </div>
 
         <div class="input-group input-group-sm mb-1">
           <div class="input-group-text">
@@ -237,15 +252,15 @@
           <span class="input-group-text">Pan</span>
           <span class="input-group-text">x</span>
           <input type="number" class="form-control form-control-sm" id="shadowx" name="shadowx" step="1"
-            value="0" onchange="drawText()" disabled />
+            value="0" oninput="drawText()" onmousewheel disabled />
 
           <span class="input-group-text">y</span>
           <input type="number" class="form-control form-control-sm" id="shadowy" name="shadowy" step="1"
-            value="0" onchange="drawText()" disabled />
+            value="0" oninput="drawText()" onmousewheel disabled />
 
           <span class="input-group-text">Radius</span>
           <input type="number" class="form-control form-control-sm" id="shadowblur" name="shadowblur" step="1"
-            value="0" onchange="drawText()" disabled />
+            value="0" oninput="drawText()" onmousewheel disabled />
         </div>
       </div>
     </div>
@@ -285,7 +300,7 @@
               Start file name index from
             </div>
             <input type="number" class="form-control form-control-sm" id="startindex" name="startindex" min="0" value="10"
-              placeholder="start index from">
+              placeholder="start index from" onmousewheel>
           </div>
           <button type="button" class="btn btn-success m-1" onclick="downloadAll()">Download all</button>
         </div>
